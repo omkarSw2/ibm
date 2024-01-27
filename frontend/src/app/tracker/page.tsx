@@ -42,15 +42,7 @@ import {
   DropResult,
   Droppable,
 } from "react-beautiful-dnd";
-type data = {
-  title: string;
-  components: {
-    name: string;
-    image: string | null;
-    createdAt: string;
-    id: number;
-  }[];
-};
+import { Metadata } from "next";
 
 type Cards = {
   id: number;
@@ -144,7 +136,7 @@ const Tracerpage = () => {
     const { source, destination } = result;
     if (!destination) return;
     if (source.droppableId !== destination.droppableId) {
-      const newData = [...JSON.parse(JSON.stringify(data))]; //shallow copy concept
+      const newData = [...JSON.parse(JSON.stringify(data))];
       const oldDroppableIndex = newData.findIndex(
         (x) => x.id == source.droppableId.split("droppable")[1]
       );
@@ -172,7 +164,7 @@ const Tracerpage = () => {
   }, []);
 
   return (
-    <DndContext onDragEnd={onDragEnd}>
+    <>
       <h1 className="text-center mt-8 mb-3 font-bold text-[25px] ">
         Drag and Drop Application
       </h1>
@@ -233,74 +225,78 @@ const Tracerpage = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="flex gap-4 justify-between my-20 mx-4 flex-col lg:flex-row">
-        {data.map((val, index) => {
-          return (
-            <Droppable key={index} droppableId={`droppable${index}`}>
-              {(provided) => (
-                <div
-                  className="p-5 lg:w-1/3 w-full bg-white  border-gray-400 border border-dashed"
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}>
-                  <h2 className="text-center font-bold mb-6 text-black">
-                    {val.title}
-                  </h2>
-                  {val.components?.map((component, index) => (
-                    <Draggable
-                      key={component.id}
-                      draggableId={component.id.toString()}
-                      index={index}>
-                      {(provided) => (
-                        <div
-                          className="bg-gray-200 mx-1 px-4 py-3 my-3 flex "
-                          {...provided.dragHandleProps}
-                          {...provided.draggableProps}
-                          ref={provided.innerRef}>
-                          {component.name}{" "}
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="ml-2">
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Are you absolutely sure?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This action cannot be undone. This will
-                                  permanently delete your Bug Report and remove
-                                  your data from our servers.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction>Continue</AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="ml-2">
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          );
-        })}
-      </div>
-    </DndContext>
+      <DndContext onDragEnd={onDragEnd}>
+        <div className="flex gap-4 justify-between my-20 mx-4 flex-col lg:flex-row">
+          {data.map((val, index) => {
+            return (
+              <Droppable key={index} droppableId={`droppable${index}`}>
+                {(provided) => (
+                  <div
+                    className="p-5 lg:w-1/3 w-full bg-white  border-gray-400 border border-dashed"
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}>
+                    <h2 className="text-center font-bold mb-6 text-black">
+                      {val.title}
+                    </h2>
+                    {val.components?.map((component, index) => (
+                      <Draggable
+                        key={component.id}
+                        draggableId={component.id.toString()}
+                        index={index}>
+                        {(provided) => (
+                          <div
+                            className="bg-gray-200 mx-1 px-4 py-3 my-3 flex "
+                            {...provided.dragHandleProps}
+                            {...provided.draggableProps}
+                            ref={provided.innerRef}>
+                            {component.name}{" "}
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  className="ml-2">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>
+                                    Are you absolutely sure?
+                                  </AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will
+                                    permanently delete your Bug Report and
+                                    remove your data from our servers.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction className="bg-red-500 hover:bg-red-700 text-white font-bold ">
+                                    Continue
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="ml-2">
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            );
+          })}
+        </div>
+      </DndContext>
+    </>
   );
 };
 
